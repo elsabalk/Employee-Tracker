@@ -31,7 +31,7 @@ const viewAllEmployees = async () => {
     console.log('User selected view all employee logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employees AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id';
+    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id';
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -51,7 +51,7 @@ const viewAllEmpByDepartment = async () => {
     console.log('User selected view all employees by department logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employees AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by department_id';
+    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by department_id';
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -71,7 +71,7 @@ const viewAllEmpByManager = async () => {
     console.log('User selected view all employees by department logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employees AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by manager_id';
+    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by manager_id';
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -117,7 +117,7 @@ const addEmpRecord = () => {
 
     ]).then(answers => {
 
-        let sqlQuery = connection.query(`INSERT INTO employee_db.employees values ('${answers.id}', '${answers.firstName}', '${answers.lastName}', ${answers.roleId}, ${answers.managerId})`);
+        let sqlQuery = connection.query(`INSERT INTO employee_db.employee values ('${answers.id}', '${answers.firstName}', '${answers.lastName}', ${answers.roleId}, ${answers.managerId})`);
         console.log(`The employee record '${answers.firstName}' '${answers.lastName}' has been added`);
 
         initialAction();
@@ -135,7 +135,7 @@ const deleteEmployeeRecord = () => {
 
     ]).then(answers => {
 
-        let sqlQuery = connection.query(`DELETE from employee_db.employees where id = '${answers.id}'`);
+        let sqlQuery = connection.query(`DELETE from employee_db.employee where id = '${answers.id}'`);
         console.log(`The employee record '${answers.id}' has been deleted`);
         initialAction();
     })
@@ -158,7 +158,7 @@ const updateEmployeeRole = () => {
 
     ]).then(answers => {
 
-        let sqlQuery = connection.query(`UPDATE employee_db.employees set role_id ='${answers.roleId}' where id= '${answers.employeeId}'`);
+        let sqlQuery = connection.query(`UPDATE employee_db.employee set role_id ='${answers.roleId}' where id= '${answers.employeeId}'`);
         console.log(`The employee  id '${answers.employeeId}' has been updated with new role id '${answers.roleId}'`);
         initialAction();
     })
