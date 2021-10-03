@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "scripts.start"
+    "test": "npm test",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "inquirer": "^8.1.5",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.0",
     "sql": "^0.78.0"
   }
 }

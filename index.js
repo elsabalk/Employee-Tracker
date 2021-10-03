@@ -1,5 +1,5 @@
 // List the dependencies here.
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const util = require('util');
 
@@ -31,7 +31,7 @@ const viewAllEmployees = async () => {
     console.log('User selected view all employee logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id';
+    let query = 'SELECT emp.id, emp.first_name AS "First Name", emp.last_name AS "Last Name", IFNULL(r.title, "No Data") AS "Title", IFNULL(d.department_name, "No Data") AS "Department", r.salary AS "Salary", CONCAT(m.first_name," ",m.last_name) AS "Manager" FROM employee emp LEFT JOIN role r ON r.id = emp.role_id LEFT JOIN department d ON d.id = r.department_id LEFT JOIN employee m ON m.id = emp.manager_id ORDER BY emp.id';
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -51,7 +51,8 @@ const viewAllEmpByDepartment = async () => {
     console.log('User selected view all employees by department logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by department_id';
+    let query = 'SELECT e.first_name AS "First Name", e.last_name AS "Last Name", r.title, d.department_name AS "Department" FROM employee e INNER JOIN role r ON r.id = e.role_id INNER JOIN department d ON d.id = r.department_id order by department_name';
+
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -71,7 +72,7 @@ const viewAllEmpByManager = async () => {
     console.log('User selected view all employees by department logic');
     let employeeArray = [];
 
-    let query = 'SELECT emp.id, emp.first_name, emp.last_name, role.title, role.salary, department.name as department, emp.manager_id as manager FROM employee_db.employee AS emp, employee_db.role as role, employee_db.department as department WHERE emp.role_id = role.id and role.department_id = department.id order by manager_id';
+    let query = 'SELECT CONCAT(e.first_name," " ,e.last_name) AS full_name, r.title, e.manager_id FROM employee e INNER JOIN role r ON r.id = e.role_id';
     connection.query(query, function(err, res) {
         if (err) throw err;
 
@@ -180,7 +181,7 @@ const addADepartment = () => {
 
     ]).then(answers => {
 
-        let sqlQuery = connection.query(`INSERT INTO employee_db.department values('${answers.departmentId}','${answers.departmentName}', 0);`);
+        let sqlQuery = connection.query(`INSERT INTO employee_db.department values('${answers.departmentId}','${answers.departmentName}');`);
         console.log(`The department id '${answers.departmentId}' has been created with name '${answers.departmentName}'`);
         initialAction();
     })
